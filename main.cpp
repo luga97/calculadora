@@ -27,13 +27,22 @@ void multiplicar_escalar_vector(float*, float, int);
 
 //funciones principales de matrices
 void sumar_matrices();
-// void restar_matrices();
+void restar_matrices();
 // void multiplicar_matrices();
 
 //funciones de apoyo para matrices
-void llenar_matriz(float,int,int);
-void mostrar_matriz(float,int,int);
-
+void llenar_matriz(float*,int,int);
+void mostrar_matriz(float*,int,int);
+void realizar_suma_matrices(float*,float*,int,int);
+void realizar_resta_matrices(float*, float*, int, int); 
+void ordenar_resultado_matrices(float*, int, int);
+//funciones de ordenamiento
+void ordenar_mat_asc(float*,int,int);
+void ordenar_mat_desc(float*,int,int);
+void ordenar_mat_serp_asc(float*,int,int);
+void ordenar_mat_serp_desc(float *, int, int);
+void serpentina_asc(float *, int, int);
+void serpentina_desc(float *, int, int);
 
 int main(){
     mostrar_menu();
@@ -49,8 +58,7 @@ void mostrar_menu(){
     cout << "4.-Multiplicar vector por escalar." << endl;
     cout << "5.-Suma de matrices."<<endl;
     cout << "6.-Resta de matrices." << endl;
-    cout << "7.-Multiplicacion de matrices." << endl;
-    cout << "8.-Salir." << endl;
+    cout << "7.-Salir." << endl;
     cout << "Ingrese una opcion: ",cin >> opcion;
     switch(opcion){
         case 1:
@@ -79,15 +87,16 @@ void mostrar_menu(){
             mostrar_menu();
             break;
         case 5:
-            sumar_matrices();
+            do
+            {
+                sumar_matrices();
+            } while (preguntar_repetir());
+            mostrar_menu();
             break;
         case 6:
-            //restar_matrices();
+            restar_matrices();
             break;
         case 7:
-            //multiplicar_matrices();
-            break;
-        case 8:
             break;
         default:
             cout << "Por favor ingrese una opcion valida."<<endl;
@@ -295,131 +304,218 @@ void multiplicar_escalar_vector(float* vector,float escalar, int tam){
 
 void sumar_matrices(){
     cout << "----------SUMA DE MATRICES----------" << endl;
-    int row,col;
+    int row,col,cont=0;
     cout << "ingrese la cantidad de filas: ",cin >> row;
     cout << "ingrese la cantidad de columnas: ",cin >> col;
-    float matriz1[row][col];
+    float mat1[row*col];
     cout << "a continuacion ingrese los valores correspondientes a la primera matriz."<<endl;
-    
-    //TODO llenar_matriz();
-    for(int i=0;i<row;i++){
-        for(int j=0;j<col;j++){
-            cout << "Ingrese el valor correspondiente a la posicion ("<<(i+1)<<","<<(j+1)<<") de la matriz: ",cin>> matriz1[i][j];
-        }
-    }
-    cout << "acabas de ingresar: " << endl;
+    llenar_matriz(mat1,row,col);
 
-    //TODO funcion mostrar_matriz()
-    for(int i=0;i<row;i++){
-        cout << "[ ";
-        for(int j=0;j<col;j++){
-            cout << matriz1[i][j] << " ";
-        }
-        cout << "]"<<endl;
-    }
-    cout << endl;
-    //finaliza llenar matriz.
-
-    float matriz2[row][col];
+    float mat2[row*col];
     cout << "a continuacion ingrese los valores correspondientes a la segunda matriz." << endl;
-
-    //TODO pasar a funcion llenar_matriz();
-    for(int i=0;i<row;i++){
-        for(int j=0;j<col;j++){
-            cout << "Ingrese el valor correspondiente a la posicion ("<<(i+1)<<","<<(j+1)<<") de la matriz: ",cin>> matriz2[i][j];
-        }
-    }
-    cout << "acabas de ingresar: " << endl;
-    
-    //TODO funcion mostrar_matriz()
-    for(int i=0;i<row;i++){
-        cout << "[ ";
-        for(int j=0;j<col;j++){
-            cout << matriz2[i][j] << " ";
-        }
-        cout << "]"<<endl;
-    }
-    cout << endl;
-    //finaliza llenar matriz.
-
-    //finaliza funcion llenar matriz.
-
-    //TODO funcion realizar_suma_matrices
-    float resultado[row][col],aux;
-    for(int i=0;i<row;i++){
-        for(int j=0;j<col;j++){
-           resultado[i][j]=matriz1[i][j]+matriz2[i][j];
-        }
-    }
-
-    //TODO ordenar_matriz
-    int opcion;
-    cout << "Como desea ordenar el resultado?"<<endl;
-    cout <<"1.-De manera ascendiente."<<endl;
-    cout <<"2.-De manera descendiente."<<endl;
-    cout <<"3.-No quiero ordenar el resultado."<<endl;
-    cout <<"Ingrese una opcion: ",cin >> opcion;
-    
-    switch(opcion){
-        case 1:
-            //Ordenar de manecera ascendiente
-            for(int i=0;i<row;i++){
-                cout<<"fila fija "<<(i+1)<<endl;
-                for(int j=0;j<col;j++){
-                    cout<<"columna fija "<<(j+1)<<endl;
-                    for(int x=0;x<row;x++){
-                        cout<<"fila dinamica "<<(x+1)<<endl;
-                        for(int y=0;y<col;y++){
-                            cout<<"columna dinamica "<<(y+1)<<endl;
-                            cout<<"el valor fijo es "<<resultado[i][j]<<" y el valor dinamico es "<<resultado[x][y]<<endl;
-                            if(resultado[x][y]<resultado[i][j]){
-                                cout<<"entro al if"<<endl;
-                                aux = resultado[x][y];
-                                resultado[x][y] = resultado[i][j];
-                                resultado[i][j] = aux;
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-    }
-
-
-
-    //TODO funcion mostrar_matriz
-    cout << "resultado: " << endl;
-        for(int i=0;i<row;i++){
-        cout << "[ ";
-        for(int j=0;j<col;j++){
-            cout << resultado[i][j] << " ";
-        }
-        cout << "]"<<endl;
-    }
-    //finaliza mostrar_matriz
-    //finaliza realizar_suma_matrices
+    llenar_matriz(mat2,row,col);
+    realizar_suma_matrices(mat1,mat2,row,col);
         
 }
 
-//funcionesde apoyo para matrices
+void restar_matrices()
+{
+    cout << "----------SUMA DE MATRICES----------" << endl;
+    int row, col, cont = 0;
+    cout << "ingrese la cantidad de filas: ", cin >> row;
+    cout << "ingrese la cantidad de columnas: ", cin >> col;
+    float mat1[row * col];
+    cout << "a continuacion ingrese los valores correspondientes a la primera matriz." << endl;
+    llenar_matriz(mat1, row, col);
 
-/*void llenar_matriz(float** matriz,int row,int col){
-    for(int i=0;i<row;i++){
-        for(int j=0;j<col;j++){
-            cout << "Ingrese el valor correspondiente a la posicion ("<<(i+1)<<","<<(j+1)<<") de la matriz: ",cin>> matriz[i][j];
+    float mat2[row * col];
+    cout << "a continuacion ingrese los valores correspondientes a la segunda matriz." << endl;
+    llenar_matriz(mat2, row, col);
+    realizar_resta_matrices(mat1, mat2, row, col);
+}
+
+// funcionesde apoyo para matrices
+//NOTA: las matrices se convierten en vectores para facilitar el paso por parametros y gestionarlas de manera mas sencilla
+void llenar_matriz(float* matriz,int row,int col){
+    int fila = 1;
+    int columna = 1;
+    for(int i=0;i<row*col;i++){
+        cout << "Ingrese el valor correspondiente a la posicion ("<<fila<<","<<columna<<") de la matriz: ",cin>> matriz[i];
+        if(columna%col==0){
+            fila++;
+            columna=1;
+        }else{
+            columna++;
         }
     }
     cout << "acabas de ingresar: " << endl;
     mostrar_matriz(matriz,row,col);
     cout << endl;
-}*/
+}
 
-/*void mostrar_matriz(float** matriz,int row,int col){
-    for(int i=0;i<row;i++){
-        cout << "[ ";
-        for(int j=0;j<col;j++){
-            cout << matriz[i][j] << " ";
+void mostrar_matriz(float* matriz,int row,int col){
+    int fila=1;
+    int columna=1;
+    for(int i=0;i<row*col;i++){
+        if(columna==1){
+            cout << "[ ";
         }
-        cout << "]";
+        cout << matriz[i]<< " ";
+        
+        if(columna%col==0){
+            cout << "]"<<endl;
+            fila++;
+            columna=1;
+        }else{
+            columna++;
+        }
     }
-}*/
+}
+
+void realizar_suma_matrices(float* mat1,float* mat2,int row,int col){
+    float resultado[row*col];
+    for(int i=0;i<row*col;i++){
+        resultado[i] = mat1[i]+mat2[i];
+    }
+    ordenar_resultado_matrices(resultado,row,col);
+    mostrar_matriz(resultado,row,col);
+}
+
+void realizar_resta_matrices(float* mat1,float* mat2,int row,int col){
+    float resultado[row*col];
+    for(int i=0;i<row*col;i++){
+        resultado[i] = mat1[i]-mat2[i];
+    }
+    ordenar_resultado_matrices(resultado,row,col);
+    mostrar_matriz(resultado,row,col);
+}
+
+
+void ordenar_resultado_matrices(float* matriz,int row,int col){
+    int opcion;
+    cout << "Como desea ordenar el resultado?"<<endl;
+    cout <<"1.-De manera ascendiente."<<endl;
+    cout <<"2.-De manera descendiente."<<endl;
+    cout <<"3.-En serpentina de manera ascendiente."<<endl;
+    cout <<"4.-En serpentina de manera descendiente."<<endl;
+    cout <<"5.-No quiero ordenar el resultado."<<endl;
+    cout <<"Ingrese una opcion: ",cin >> opcion;
+    switch(opcion){
+        case 1:
+            //Ordenar de manera ascendiente
+            ordenar_mat_asc(matriz,row,col);
+            break;
+        case 2:
+            //Ordenar de manera descendiente
+            ordenar_mat_desc(matriz,row,col);
+            break;
+        case 3:
+            //Ordenar en serpentina de manera ascendiente
+            ordenar_mat_serp_asc(matriz,row,col);
+            break;
+        case 4:
+            //Ordenar en serpentina de manera ascendiente
+            ordenar_mat_serp_desc(matriz,row,col);
+            break;
+        case 5:
+            break;
+        default:
+            cout << "Por favor ingrese una opcion valida."<<endl<<endl;
+            ordenar_resultado_matrices(matriz,row,col);
+    }
+}
+
+//funciones de ordenamiento
+void ordenar_mat_asc(float* matriz,int row,int col){
+    int aux,tam=row*col;
+    for (int i=0;i<tam;i++) {
+        for (int j=0; j<tam-1;j++) {
+            if (matriz[j]>matriz[j + 1]) {
+                aux=matriz[j];
+                matriz[j]=matriz[j + 1];
+                matriz[j+1] = aux;
+            }
+        }
+    }
+}
+
+void ordenar_mat_desc(float* matriz,int row,int col){
+    int aux,tam=row*col;
+    for (int i=0;i<tam;i++) {
+        for (int j=0; j<tam-1;j++) {
+            if (matriz[j]<matriz[j + 1]) {
+                aux=matriz[j];
+                matriz[j]=matriz[j + 1];
+                matriz[j+1] = aux;
+            }
+        }
+    }
+}
+//ALERTA   SOLO FUNCIONA PARA MATRICES 2X2 Y 3X3
+void ordenar_mat_serp_asc(float* matriz,int row,int col){
+    int aux,tam=row*col;
+    for (int i=0;i<tam;i++) {
+        for (int j=0; j<tam-1;j++) {
+            if (matriz[j]>matriz[j + 1]) {
+                aux=matriz[j];
+                matriz[j]=matriz[j + 1];
+                matriz[j+1] = aux;
+            }
+        }
+    }
+    serpentina_asc(matriz,row,col);
+}
+//ALERTA   SOLO FUNCIONA PARA MATRICES 2X2 Y 3X3
+void ordenar_mat_serp_desc(float* matriz,int row,int col){
+    int aux,tam=row*col;
+    for (int i=0;i<tam;i++) {
+        for (int j=0; j<tam-1;j++) {
+            if (matriz[j]<matriz[j + 1]) {
+                aux=matriz[j];
+                matriz[j]=matriz[j + 1];
+                matriz[j+1] = aux;
+            }
+        }
+    }
+    serpentina_desc(matriz,row,col);
+}
+
+void serpentina_asc(float* matriz, int row, int col){
+    int fila=1,columna=1;
+    float copia[row*col];
+    for(int i=0;i<row*col;i++){
+        copia[i]=matriz[i];
+    }
+    ordenar_mat_desc(copia, row, col);
+    for(int i=0;i<row*col;i++){
+        if(fila%2==0){
+            matriz[i]=copia[i];            
+        }
+        if(columna%col==0){
+            fila++;
+            columna=1;
+        }else{
+            columna++;
+        }
+    }
+}
+
+void serpentina_desc(float* matriz, int row, int col){
+    int fila=1,columna=1;
+    float copia[row*col];
+    for(int i=0;i<row*col;i++){
+        copia[i]=matriz[i];
+    }
+    ordenar_mat_asc(copia, row, col);
+    for(int i=0;i<row*col;i++){
+        if(fila%2==0){
+            matriz[i]=copia[i];            
+        }
+        if(columna%col==0){
+            fila++;
+            columna=1;
+        }else{
+            columna++;
+        }
+    }
+}
